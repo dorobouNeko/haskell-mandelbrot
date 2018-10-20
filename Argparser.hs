@@ -51,5 +51,11 @@ argParser args =
 		listOfArgList = map words splitArgs
 
 
-help = putStrLn "This is a help message. Very helpful indeed."
+help =
+	putStrLn "main [-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]" >>
+	putStrLn "-s : maximum horizontal and vertical size in pixels" >>
+	putStrLn "-b : bounding coordinates for drawing the Mandelbrot set" >>
+	putStrLn "-c : set color hues for green and blue (0 to 255)" >>
+	exitSuccess
+
 failedToParse = die "Failed to parse arguments. Use -h for more information."
