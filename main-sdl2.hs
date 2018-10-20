@@ -7,7 +7,7 @@ import System.Environment
 import Data.Function (on)
 import Foreign.C.Types (CFloat,CInt)
 
-
+--  [-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]
 main :: IO ()
 main = do
 	args <- getArgs -- maxW maxH lB rB uB dB green=255 blue=255
@@ -17,8 +17,8 @@ main = do
 				(maxRes, c) = splitAt 2 args
 				(b,color) = splitAt 4 c
 				([mw, mh],[lB, rB, uB, dB]) =
-				 	(map strToInt maxRes
-				 	, map strToDouble b)
+--				(maxRes, bounds) =
+					(map strToInt maxRes, map strToDouble b)
 			runProgram mw mh lB rB uB dB 255 255
 		_ -> do print "failure"
 
