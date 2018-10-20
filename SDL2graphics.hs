@@ -1,26 +1,13 @@
-{-# LANGUAGE OverloadedStrings #-}
+module SDL2graphics where
 
+{-# LANGUAGE OverloadedStrings #-}
 import qualified SDL
 import Control.Monad (unless)
 import qualified Mandelbrot as M
-import System.Environment
 import Data.Function (on)
 import Foreign.C.Types (CFloat,CInt)
+import qualified Data.Text as T (pack)
 
---  [-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]
-main :: IO ()
-main = do
-	args <- getArgs -- maxW maxH lB rB uB dB green=255 blue=255
-	case args of
-		[mw, mh, lB, rB, uB, dB] -> do
-			let
-				(maxRes, c) = splitAt 2 args
-				(b,color) = splitAt 4 c
-				([mw, mh],[lB, rB, uB, dB]) =
---				(maxRes, bounds) =
-					(map strToInt maxRes, map strToDouble b)
-			runProgram mw mh lB rB uB dB 255 255
-		_ -> do print "failure"
 
 runProgram mw mh lB rB uB dB green blue = do
 	let
@@ -45,7 +32,7 @@ runProgram mw mh lB rB uB dB green blue = do
 			print (head s0)
 			print (last s0)
 -}
-	window <- SDL.createWindow "SDL Application" SDL.defaultWindow
+	window <- SDL.createWindow (T.pack "SDL Application") SDL.defaultWindow
 			{ SDL.windowInitialSize  = windowSize }{-
 			, SDL.windowOpenGL = Just SDL.defaultOpenGL }
 			-}
