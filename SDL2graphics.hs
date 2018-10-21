@@ -110,7 +110,6 @@ drawColor''' r (x:xs) h offset py g b =
 
 drawMirrored' r offset py (x,y) =
 	drawP r (x,y) >>
-	--drawP r (x, 150) >> drawP r (x,300) >> drawP r (x,450) >> drawP r (x,599)
 	if offset < 0
 		then
 			if y <= -offset*2
@@ -130,21 +129,23 @@ appLoop renderer s list i hues offset py g b = do
 		(newState, esc) = M.reduce s
 		noEsc = null esc
 		newEscList = if noEsc then list else list ++ [(i,(map fst esc))]
---	print (i, newList)
+
 	if noEsc
 		then print ("No Escape",i) >> return ()
 		else do
 			SDL.rendererDrawColor renderer SDL.$= SDL.V4 0 0 0 255
 			SDL.clear renderer
---			drawColored renderer scale 0 newList
---			print (length newList)
---			drawColor renderer newEscList 1 (length newEscList)
---			drawColor' renderer newEscList i
+{-
+			drawColored renderer scale 0 newList
+			print (length newList)
+-}
+{-
+			drawColor renderer newEscList 1 (length newEscList)
+			drawColor' renderer newEscList i
+-}
 			if offset == 0
 				then drawColor''  renderer newEscList hues g b
 				else drawColor''' renderer newEscList hues offset py g b
---			SDL.rendererDrawColor renderer SDL.$= SDL.V4 255 255 255 255
---			mapM_ ((drawMirrored scale renderer) . fst) sn
 
 			SDL.present renderer
 
