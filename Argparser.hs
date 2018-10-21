@@ -11,7 +11,7 @@ argParser args =
 		[]               ->	return ["640", "480", "-2", "2", "2", "-2", "255", "255"]
 		[["noDashes"]]   -> failedToParse
 		[["h"]]          -> help >> exitSuccess
-		[[],["help"]]       -> help >> exitSuccess
+		[[],["help"]]    -> help >> exitSuccess
 		["s", mw, mh]:bs ->	case bs of
 			-- only -s flag
 			[]                   ->	return [mw, mh, "-2", "2", "2", "-2", "255", "255"]
@@ -53,7 +53,7 @@ argParser args =
 
 
 help =
-	putStrLn "main [-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]" >>
+	putStrLn "Main [-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]" >>
 	putStrLn "-s : maximum horizontal and vertical size in pixels" >>
 	putStrLn "-b : bounding coordinates for drawing the Mandelbrot set" >>
 	putStrLn "-c : set color hues for green and blue (0 to 255)" >>
