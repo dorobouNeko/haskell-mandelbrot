@@ -11,6 +11,7 @@ argParser args =
 		[]               ->	return ["640", "480", "-2", "2", "2", "-2", "255", "255"]
 		[["noDashes"]]   -> failedToParse
 		[["h"]]          -> help >> exitSuccess
+		[[],["help"]]       -> help >> exitSuccess
 		["s", mw, mh]:bs ->	case bs of
 			-- only -s flag
 			[]                   ->	return [mw, mh, "-2", "2", "2", "-2", "255", "255"]
@@ -58,4 +59,4 @@ help =
 	putStrLn "-c : set color hues for green and blue (0 to 255)" >>
 	exitSuccess
 
-failedToParse = die "Failed to parse arguments. Use -h for more information."
+failedToParse = die "Failed to parse arguments. Use -h or --help for more information."
