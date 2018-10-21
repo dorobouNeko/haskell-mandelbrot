@@ -25,24 +25,24 @@ runProgram mw mh lB rB uB dB green blue = do
 				filter (\x -> mod x 23 == 0) ([0..255]++(reverse [1..254]))
 	SDL.initializeAll
 {- debug option
-			print (px,py,"dimensions")
-			print (py',"point height")
-			print (offset,"offset")
-			print (length s0)
-			print (head s0)
-			print (last s0)
+	print (px,py,"dimensions")
+	print (py',"point height")
+	print (offset,"offset")
+	print (length s0)
+	print (head s0)
+	print (last s0)
 -}
 	window <- SDL.createWindow (T.pack "SDL Application") SDL.defaultWindow
 			{ SDL.windowInitialSize  = windowSize }{-
 			, SDL.windowOpenGL = Just SDL.defaultOpenGL }
 			-}
 {-
-		glContext <- SDL.glCreateContext window
-		SDL.swapInterval SDL.$= SDL.ImmediateUpdates
+	glContext <- SDL.glCreateContext window
+	SDL.swapInterval SDL.$= SDL.ImmediateUpdates
 -}
 	renderer <- SDL.createRenderer window (-1) SDL.defaultRenderer
 {-
-		SDL.rendererScale renderer SDL.$= (v2CFloat (s, s))
+	SDL.rendererScale renderer SDL.$= (v2CFloat (s, s))
 -}
 	appLoop renderer s0 [] 0 hue offset py green blue
 
@@ -59,19 +59,19 @@ strToFloat  = \x -> read x :: Float
 
 drawP rend = (SDL.drawPoint rend) . SDL.P . v2CInt
 
-drawMirrored n r (x,y) =
-	drawP r (x,y) >>
+drawMirrored n r (x, y) =
+	drawP r (x, y) >>
 	drawP r (x, -y+2*n)
 
 divInt = (/) `on` fromIntegral
 
-drawColored r n i [] = return ()
+drawColored r n i []     = return ()
 drawColored r n i (x:xs) =
 	SDL.rendererDrawColor r SDL.$= SDL.V4 i 85 170 255 >>
 	mapM_ (drawMirrored n r) x >>
 	drawColored r n (mod (i+5) 255) xs
 
-drawColor _ [] _ _ = return ()
+drawColor _ []     _ _ = return ()
 drawColor r (x:xs) j l =
 	SDL.rendererDrawColor r SDL.$= SDL.V4 hue 85 170 255 >>
 	mapM_ (drawP r) (snd x) >>
@@ -80,7 +80,7 @@ drawColor r (x:xs) j l =
 		hue = ceiling $ 255*(divInt j l)
 
 
-drawColor' _ [] _ = return ()
+drawColor' _ []     _     = return ()
 drawColor' r (x:xs) total =
 	SDL.rendererDrawColor r SDL.$= SDL.V4 hue 85 170 255 >>
 	mapM_ (drawP r) esc >>
@@ -89,8 +89,8 @@ drawColor' r (x:xs) total =
 		(i,esc) = x
 		hue = ceiling $ 255*(divInt i total)
 
-drawColor'' _ [] (h:hs) _ _ = return ()
-drawColor'' r (x:xs) h g b =
+drawColor'' _ []     (h:hs) _ _ = return ()
+drawColor'' r (x:xs) h      g b =
 	SDL.rendererDrawColor r SDL.$= SDL.V4 hue (fromIntegral g) (fromIntegral b) 255 >>
 	mapM_ (drawP r) esc >>
 	drawColor'' r xs hs g b
@@ -98,8 +98,8 @@ drawColor'' r (x:xs) h g b =
 		(i,esc) = x
 		(hue:hs) = h
 
-drawColor''' _ [] (h:hs) _ _ _ _ = return ()
-drawColor''' r (x:xs) h offset py g b =
+drawColor''' _ []     (h:hs) _      _  _ _ = return ()
+drawColor''' r (x:xs) h      offset py g b =
 	SDL.rendererDrawColor r SDL.$= SDL.V4 hue (fromIntegral g) (fromIntegral b) 255 >>
 	mapM_ (drawMirrored' r offset py) esc >>
 	drawColor''' r xs hs offset py g b
@@ -131,7 +131,7 @@ appLoop renderer s list i hues offset py g b = do
 		newEscList = if noEsc then list else list ++ [(i,(map fst esc))]
 
 	if noEsc
-		then print ("No Escape",i) >> return ()
+		then {- print ("No Escape",i) >> -}	return ()
 		else do
 			SDL.rendererDrawColor renderer SDL.$= SDL.V4 0 0 0 255
 			SDL.clear renderer

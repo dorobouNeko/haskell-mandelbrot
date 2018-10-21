@@ -8,39 +8,45 @@ argParser :: [String] -> IO [String]
 argParser args =
 	case listOfArgList of
 		-- no args. using default values
-		[]               ->	return ["640", "480", "-2", "2", "2", "-2", "255", "255"]
+		[]               ->	return $ defSize ++ defBounds ++ defColor
 		[["noDashes"]]   -> failedToParse
 		[["h"]]          -> help >> exitSuccess
 		[[],["help"]]    -> help >> exitSuccess
+		[["d"]]          -> return ["DEBUG"]
+		[[],["debug"]]   -> return ["DEBUG"]
 		["s", mw, mh]:bs ->	case bs of
 			-- only -s flag
-			[]                   ->	return [mw, mh, "-2", "2", "2", "-2", "255", "255"]
+			[]                   ->	return $ [mw, mh] ++ defBounds ++ defColor
 			["b",lB,rB,uB,dB]:cs ->	case cs of
 				-- -s and -b flag
-				[]                  -> return [mw, mh, lB, rB, uB, dB, "255", "255"]
+				[]                  ->
+					return $ [mw, mh, lB, rB, uB, dB] ++ defColor
 				["c",green,blue]:xs -> case xs of
 					-- all flags
-					[] -> return [mw, mh, lB, rB, uB, dB, green, blue]
+					[] -> return $ [mw, mh, lB, rB, uB, dB, green, blue]
 					_  -> failedToParse
 				_ -> failedToParse
 			["c",green,blue]:xs -> case xs of
 				-- -s and -c flags
-				[] -> return [mw, mh, "-2", "2", "2", "-2", green, blue]
+				[] -> return $ [mw, mh] ++ defBounds ++ [green, blue]
 				_  -> failedToParse
 			_ -> failedToParse
 		["b",lB,rB,uB,dB]:cs ->	case cs of
 			-- only -b flag
-			[]                  -> return ["640", "480", lB, rB, uB, dB, "255", "255"]
+			[]                  -> return $ defSize ++ [lB, rB, uB, dB] ++ defColor
 			["c",green,blue]:xs -> case xs of
 				-- -b and -c flags
-				[] -> return ["640", "480", lB, rB, uB, dB, green, blue]
+				[] -> return $ defSize ++ [lB, rB, uB, dB, green, blue]
 				_  -> failedToParse
 		["c",green,blue]:xs -> case xs of
 			-- only -c flag
-			[] -> return ["640", "480", "-2", "2", "2", "-2", green, blue]
+			[] -> return $ defSize ++ defBounds ++ [green, blue]
 			_  -> failedToParse
 		_ -> failedToParse
 	where
+		defSize   = ["640", "480"]
+		defBounds = ["-2", "2", "2", "-2"]
+		defColor  = ["255", "255"]
 		jointArgs = unwords args
 		splitArgs =
 			if jointArgs == []

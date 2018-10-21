@@ -1,3 +1,6 @@
 explain installation
 add debug option
 smooth color gradient
+validate argument values to be within range and type
+add this feature to argparser and make it return ready to use
+values for main program
