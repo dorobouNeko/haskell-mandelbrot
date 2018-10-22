@@ -2,10 +2,13 @@ module Argparser where
 
 import System.Exit
 import Data.List.Split (splitOn)
-import SDL2graphics (strToDouble, strToInt)
+import Text.Read (readMaybe)
+
+strToMaybeDouble = \x -> readMaybe x :: Maybe Double
+strToMaybeInt    = \x -> readMaybe x :: Maybe Int
 
 -- [-h | --help] [[-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]]
-argParser :: [String] -> IO (Bool, ([Int], [Double], [Int]))
+argParser :: [String] -> IO (Bool, ([Maybe Int], [Maybe Double], [Maybe Int]))
 argParser args =
 	case listOfArgList of
 		-- no args. using default values
@@ -19,56 +22,56 @@ argParser args =
 		["s", mw, mh]:bs ->	case bs of
 			-- only -s flag
 			[]                   ->	return $ (False,
-				( map strToInt [mw, mh]
+				( map strToMaybeInt [mw, mh]
 				, defBounds
 				, defColor ))
 			["b",lB,rB,uB,dB]:cs ->	case cs of
 				-- -s and -b flag
 				[]                  -> return $ (False,
-					( map strToInt [mw, mh]
-					, map strToDouble [ lB, rB, uB, dB]
+					( map strToMaybeInt [mw, mh]
+					, map strToMaybeDouble [ lB, rB, uB, dB]
 					, defColor ))
 				["c",green,blue]:xs -> case xs of
 					-- all flags
 					[] -> return $ (False,
-						( map strToInt [mw, mh]
-						, map strToDouble [lB, rB, uB, dB]
-						, map strToInt [green, blue] ))
+						( map strToMaybeInt [mw, mh]
+						, map strToMaybeDouble [lB, rB, uB, dB]
+						, map strToMaybeInt [green, blue] ))
 					_  -> failedToParse
 				_ -> failedToParse
 			["c",green,blue]:xs -> case xs of
 				-- -s and -c flags
 				[] -> return $ (False,
-					( map strToInt [mw, mh]
+					( map strToMaybeInt [mw, mh]
 					, defBounds
-					, map strToInt [green, blue] ))
+					, map strToMaybeInt [green, blue] ))
 				_  -> failedToParse
 			_ -> failedToParse
 		["b",lB,rB,uB,dB]:cs ->	case cs of
 			-- only -b flag
 			[]                  -> return $ (False,
 				( defSize
-				, map strToDouble [lB, rB, uB, dB]
+				, map strToMaybeDouble [lB, rB, uB, dB]
 				, defColor ))
 			["c",green,blue]:xs -> case xs of
 				-- -b and -c flags
 				[] -> return $ (False,
 					( defSize
-					, map strToDouble [lB, rB, uB, dB]
-					, map strToInt [green, blue] ))
+					, map strToMaybeDouble [lB, rB, uB, dB]
+					, map strToMaybeInt [green, blue] ))
 				_  -> failedToParse
 		["c",green,blue]:xs -> case xs of
 			-- only -c flag
 			[] -> return $ (False,
 				( defSize
 				, defBounds
-				, map strToInt [green, blue] ))
+				, map strToMaybeInt [green, blue] ))
 			_  -> failedToParse
 		_ -> failedToParse
 	where
-		defSize   = map strToInt    ["640", "480"]
-		defBounds = map strToDouble ["-2", "2", "2", "-2"]
-		defColor  = map strToInt    ["255", "255"]
+		defSize   = map strToMaybeInt    ["640", "480"]
+		defBounds = map strToMaybeDouble ["-2", "2", "2", "-2"]
+		defColor  = map strToMaybeInt    ["255", "255"]
 		defValues = (defSize, defBounds, defColor)
 		jointArgs = unwords args
 		splitArgs =
