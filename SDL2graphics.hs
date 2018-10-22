@@ -2,14 +2,14 @@ module SDL2graphics where
 
 {-# LANGUAGE OverloadedStrings #-}
 import qualified SDL
-import Control.Monad (unless)
+import Control.Monad (unless, when)
 import qualified Mandelbrot as M
 import Data.Function (on)
 import Foreign.C.Types (CFloat,CInt)
 import qualified Data.Text as T (pack)
 
 
-runProgram mw mh lB rB uB dB green blue = do
+runProgram debug mw mh lB rB uB dB green blue = do
 	let
 		bounds = (lB,rB,uB,dB)
  		(w,h) = (rB - lB, uB - dB)
@@ -24,14 +24,15 @@ runProgram mw mh lB rB uB dB green blue = do
 			cycle $
 				filter (\x -> mod x 23 == 0) ([0..255]++(reverse [1..254]))
 	SDL.initializeAll
-{- debug option
-	print (px,py,"dimensions")
-	print (py',"point height")
-	print (offset,"offset")
-	print (length s0)
-	print (head s0)
-	print (last s0)
--}
+
+	when (debug) $ do
+		print (px,py,"dimensions")
+		print (py',"point height")
+		print (offset,"offset")
+		print (length s0)
+		print (head s0)
+		print (last s0)
+
 	window <- SDL.createWindow (T.pack "SDL Application") SDL.defaultWindow
 			{ SDL.windowInitialSize  = windowSize }{-
 			, SDL.windowOpenGL = Just SDL.defaultOpenGL }
@@ -55,7 +56,6 @@ v2CInt      (x, y)   = (SDL.V2 `on` fromIntegral) x y
 
 strToDouble = \x -> read x :: Double
 strToInt    = \x -> read x :: Int
-strToFloat  = \x -> read x :: Float
 
 drawP rend = (SDL.drawPoint rend) . SDL.P . v2CInt
 
