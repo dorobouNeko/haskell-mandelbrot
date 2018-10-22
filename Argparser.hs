@@ -8,7 +8,7 @@ import Data.List (isInfixOf)
 strToMaybeDouble = \x -> readMaybe x :: Maybe Double
 strToMaybeInt    = \x -> readMaybe x :: Maybe Int
 
--- [--help] [[--s horizontal vertical] [--b left right top bottom] [--c greenHue blueHue]]
+-- [--debug] [--help] [[--s horizontal vertical] [--b left right top bottom] [--c greenHue blueHue]]
 argParser :: [String] -> IO (Bool, ([Maybe Int], [Maybe Double], [Maybe Int]))
 argParser args =
 	case listOfArgList of

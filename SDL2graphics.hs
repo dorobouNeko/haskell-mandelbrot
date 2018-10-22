@@ -8,7 +8,6 @@ import Data.Function (on)
 import Foreign.C.Types (CFloat,CInt)
 import qualified Data.Text as T (pack)
 
-
 runProgram debug mw mh lB rB uB dB green blue = do
 	let
 		bounds = (lB,rB,uB,dB)
@@ -79,7 +78,6 @@ drawColor r (x:xs) j l =
 	where
 		hue = ceiling $ 255*(divInt j l)
 
-
 drawColor' _ []     _     = return ()
 drawColor' r (x:xs) total =
 	SDL.rendererDrawColor r SDL.$= SDL.V4 hue 85 170 255 >>
@@ -107,7 +105,6 @@ drawColor''' r (x:xs) h      offset py g b =
 		(i,esc) = x
 		(hue:hs) = h
 
-
 drawMirrored' r offset py (x,y) =
 	drawP r (x,y) >>
 	if offset < 0
@@ -120,8 +117,6 @@ drawMirrored' r offset py (x,y) =
 				then drawP r (x, -y+2*(py-offset-1))
 				else return ()
 
-
---appLoop :: SDL.Renderer -> [Cells] -> IO ()
 appLoop renderer s list i hues offset py g b = do
 	events <- SDL.pollEvents
 
