@@ -3,21 +3,20 @@ module Argparser where
 import System.Exit
 import Data.List.Split (splitOn)
 import Text.Read (readMaybe)
+import Data.List (isInfixOf)
 
 strToMaybeDouble = \x -> readMaybe x :: Maybe Double
 strToMaybeInt    = \x -> readMaybe x :: Maybe Int
 
--- [-h | --help] [[-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]]
+-- [--help] [[--s horizontal vertical] [--b left right top bottom] [--c greenHue blueHue]]
 argParser :: [String] -> IO (Bool, ([Maybe Int], [Maybe Double], [Maybe Int]))
 argParser args =
 	case listOfArgList of
 		-- no args. using default values
 		[]               ->	return $ (False, defValues)
 		[["noDashes"]]   -> failedToParse
-		[["h"]]          -> help >> exitSuccess
 		[[], ["help"]]   -> help >> exitSuccess
 		-- debug on
-		[["d"]]          -> return $ (True, defValues)
 		[[], ["debug"]]  -> return $ (True, defValues)
 		["s", mw, mh]:bs ->	case bs of
 			-- only -s flag
@@ -78,8 +77,8 @@ argParser args =
 			if jointArgs == []
 				then []
 			else
-				if elem '-' jointArgs
-					then (drop 1) . (splitOn "-") $ jointArgs
+				if "--" `isInfixOf` jointArgs
+					then (drop 1) . (splitOn "--") $ jointArgs
 					else ["noDashes"]
 		listOfArgList = map words splitArgs
 
@@ -87,18 +86,16 @@ help :: IO b
 help =
 	putStrLn "Usage:" >>
 	putStrLn "" >>
-	putStrLn "Main -h" >>
 	putStrLn "Main --help" >>
-	putStrLn "Main -d" >>
 	putStrLn "Main --debug" >>
-	putStrLn "Main [-s horizontal vertical] [-b left right top bottom] [-c greenHue blueHue]" >>
+	putStrLn "Main [--s horizontal vertical] [--b left right top bottom] [--c greenHue blueHue]" >>
 	putStrLn "" >>
-	putStrLn "-h, --h : This help text :)" >>
-	putStrLn "-s      : Maximum horizontal and vertical size in pixels of display window" >>
-	putStrLn "-b      : Bounding coordinates for drawing the Mandelbrot set" >>
-	putStrLn "-c      : Set color hues for green and blue (0 to 255)" >>
-	putStrLn "-d, --d : Spits out debug information." >>
+	putStrLn "--help : This help text :)" >>
+	putStrLn "--s      : Maximum horizontal and vertical size in pixels of display window" >>
+	putStrLn "--b      : Bounding coordinates for drawing the Mandelbrot set" >>
+	putStrLn "--c      : Set color hues for green and blue (0 to 255)" >>
+	putStrLn "--debug : Spits out debug information." >>
 	exitSuccess
 
 failedToParse :: IO a
-failedToParse = die "Failed to parse arguments. Use -h or --help for more information."
+failedToParse = die "Failed to parse arguments. Use --help for more information."

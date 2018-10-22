@@ -20,7 +20,7 @@ validateValues args = do
 	if	(Nothing `elem` maybeA1) ||
 		(Nothing `elem` maybeA2) ||
 		(Nothing `elem` maybeA3)
-			then die "Invalid value(s) found in arguments. Check -h or --h for more information"
+			then die "Invalid value(s) found in arguments. Check --help for more information"
 			else
 				return $ (debug,
 					( map fromJust maybeA1
