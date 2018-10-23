@@ -1,12 +1,11 @@
 module SDL2graphics where
 
-{-# LANGUAGE OverloadedStrings #-}
 import qualified SDL
 import Control.Monad (unless, when)
 import qualified Mandelbrot as M
 import Data.Function (on)
 import Foreign.C.Types (CFloat,CInt)
-import qualified Data.Text as T (pack)
+import Data.Text (pack)
 
 runProgram debug mw mh lB rB uB dB green blue = do
 	let
@@ -32,7 +31,7 @@ runProgram debug mw mh lB rB uB dB green blue = do
 		print (head s0)
 		print (last s0)
 
-	window <- SDL.createWindow (T.pack "SDL Application") SDL.defaultWindow
+	window <- SDL.createWindow (pack "SDL Application") SDL.defaultWindow
 			{ SDL.windowInitialSize  = windowSize }{-
 			, SDL.windowOpenGL = Just SDL.defaultOpenGL }
 			-}
